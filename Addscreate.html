@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ads</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="datetime-local"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            max-width: 200px;
+            max-height: 200px;
+            display: none;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create New Advertisement</h1>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <form id="adForm">
+            <div class="form-group">
+                <label for="adsTitle">Ad Title*</label>
+                <input type="text" id="adsTitle" name="adsTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adsDescription">Description*</label>
+                <textarea id="adsDescription" name="adsDescription" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" name="companyName">
+            </div>
+
+            <div class="form-group">
+                <label for="link">Link URL*</label>
+                <input type="text" id="link" name="link" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adsImage">Ad Image*</label>
+                <input type="file" id="adsImage" name="adsImage" accept="image/*" required>
+                <img id="imagePreview" class="image-preview" alt="Image Preview">
+            </div>
+
+            <div class="form-group">
+                <label for="startDateTime">Start Date/Time*</label>
+                <input type="datetime-local" id="startDateTime" name="startDateTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endDateTime">End Date/Time*</label>
+                <input type="datetime-local" id="endDateTime" name="endDateTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status*</label>
+                <select id="status" name="status" required>
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Create Ad</button>
+        </form>
+    </div>
+
+    <script src="/eel.js"></script>
+    <script>
+        // Image preview functionality
+        document.getElementById('adsImage').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission
+        document.getElementById('adForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Get form values
+            const title = document.getElementById('adsTitle').value;
+            const description = document.getElementById('adsDescription').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const companyName = document.getElementById('companyName').value;
+            const link = document.getElementById('link').value;
+            const startDateTime = document.getElementById('startDateTime').value; // Format: "YYYY-MM-DDTHH:MM"
+            const endDateTime = document.getElementById('endDateTime').value;
+            const status = document.getElementById('status').value;
+            // Get image file
+            const imageFile = document.getElementById('adsImage').files[0];
+
+            if (!imageFile) {
+                showStatus('Please select an image', 'error');
+                return;
+            }
+
+            // Convert image to base64
+            const imageBase64 = await getBase64(imageFile);
+
+            try {
+                const response = await eel.save_ad(
+                    title,
+                    description,
+                    phone,
+                    email,
+                    companyName,
+                    link,
+                    imageBase64,
+                    startDateTime,
+                    endDateTime,
+                    status
+                )();
+
+                if (response.success) {
+                    showStatus('Ad created successfully!', 'success');
+                    document.getElementById('adForm').reset();
+                    document.getElementById('imagePreview').style.display = 'none';
+                } else {
+                    showStatus('Error: ' + (response.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + (error.message || error), 'error');
+                console.error('Error saving ad:', error);
+            }
+        });
+
+        // Helper function to convert file to base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Helper function to show status messages
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = 'status-message ' + type;
+            statusElement.style.display = 'block';
+
+            // Hide after 5 seconds
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Set default datetime values to current time
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60000; // offset in milliseconds
+            const localISOTime = (new Date(now - timezoneOffset)).toISOString().slice(0, 16);
+
+            document.getElementById('startDateTime').value = localISOTime;
+
+            // Set end time to 7 days from now by default
+            const weekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const weekLaterISOTime = (new Date(weekLater - timezoneOffset)).toISOString().slice(0, 16);
+            document.getElementById('endDateTime').value = weekLaterISOTime;
+        });
+    </script>
+</body>
+
+</html>

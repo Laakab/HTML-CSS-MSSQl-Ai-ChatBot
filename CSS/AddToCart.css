@@ -1,0 +1,131 @@
+/* Product Details Page */
+.product-details {
+    display: flex;
+    max-width: 900px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+    }
+    
+    .product-gallery {
+    flex: 1;
+    }
+    
+    #main-image {
+    width: 300px;
+    border-radius: 5px;
+    }
+    
+    .thumbnail-container {
+    display: flex;
+    margin-top: 10px;
+    gap: 5px;
+    }
+    
+    .thumbnail {
+    width: 60px;
+    cursor: pointer;
+    border-radius: 5px;
+    }
+    
+    .thumbnail:hover {
+    opacity: 0.7;
+    }
+    
+    .product-info {
+    flex: 1;
+    }
+    
+    h1 {
+    font-size: 22px;
+    }
+    
+    .description {
+    font-size: 14px;
+    color: gray;
+    margin-top: 5px;
+    }
+    
+    .price {
+    font-size: 18px;
+    font-weight: bold;
+    }
+    
+    .original-price {
+    text-decoration: line-through;
+    color: red;
+    }
+    .original-price1 {
+      color: red;
+      }
+    
+    .discount-price {
+    font-size: 20px;
+    color: green;
+    font-weight: bold;
+    }
+    
+    /* Color Selection */
+    .color-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    }
+    .color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    }
+  
+    .color:hover {
+    border: 2px solid #555;
+    }
+    
+    /* Size Selection */
+    .size-options {
+    margin-top: 10px;
+    }
+    
+    .size-options button {
+    border: 1px solid black;
+    background: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    }
+    
+    .size-options button:hover {
+    background: black;
+    color: white;
+    }
+    
+    /* Buy Button */
+    .buy-btn {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    }
+    
+    .buy-btn:hover {
+    background: #218838;
+    }
+    
+    /* Mobile View */
+    @media (max-width: 768px) {
+    .product-details {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .thumbnail-container {
+      justify-content: center;
+    }
+    }

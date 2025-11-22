@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Offers</title>
+    <link rel="stylesheet" href="./CSS/Offercreate.css">
+</head>
+<body>
+    <div class="offers-container">
+        <h1>Create New Product Offer</h1>
+        
+        <div class="offers-form">
+            <div class="form-group">
+                <label for="offerTitle">Offer Title</label>
+                <input type="text" id="offerTitle" placeholder="Enter offer title">
+            </div>
+            
+            <div class="form-group">
+                <label for="offerProduct">Product</label>
+                <select id="offerProduct">
+                    <option value="">Select a product</option>
+                    <!-- Products will be loaded here -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="offerDescription">Description</label>
+                <textarea id="offerDescription" placeholder="Enter offer description"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="offerDiscount">Discount (%)</label>
+                <input type="number" id="offerDiscount" min="0" max="100" placeholder="Enter discount percentage">
+            </div>
+            
+            <div class="form-group">
+                <label for="offerImage">Offer Image</label>
+                <input type="file" id="offerImage" accept="image/*">
+                <div class="image-preview" id="offerImagePreview"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="offerStartDate">Start Date</label>
+                <input type="date" id="offerStartDate">
+            </div>
+            
+            <div class="form-group">
+                <label for="offerEndDate">End Date</label>
+                <input type="date" id="offerEndDate">
+            </div>
+            
+            <div class="form-group">
+                <label for="offerStatus">Status</label>
+                <select id="offerStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+            
+            <button id="saveOfferBtn" class="save-btn">Save Offer</button>
+        </div>
+        
+        <div class="offers-list" id="offersList">
+            <h2>Existing Offers</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Product</th>
+                            <th>Discount</th>
+                            <th>Dates</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="offersTableBody">
+                        <!-- Offers will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="./Offercreate.js"></script>
+</body>
+</html>

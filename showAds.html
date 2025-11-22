@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsored Ads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+        }
+
+        .back-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .ads-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .ad-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .ad-content {
+            padding: 20px;
+        }
+
+        .ad-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .ad-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .ad-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: #3498db;
+            font-size: 14px;
+        }
+
+        .meta-item i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .ad-link {
+            display: inline-block;
+            background-color: #2ecc71;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .ad-link:hover {
+            background-color: #27ae60;
+        }
+
+        .ad-dates {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #95a5a6;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .no-ads {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        .company-name {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .ads-container {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-ad"></i> Sponsored Ads</h1>
+            <a href="javascript:history.back()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </header>
+
+        <div class="ads-container" id="adsContainer">
+            <!-- Ads will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch ads from the database
+            eel.get_active_ads()(function(ads) {
+                const adsContainer = document.getElementById('adsContainer');
+                
+                if (ads.length === 0) {
+                    adsContainer.innerHTML = `
+                        <div class="no-ads">
+                            <i class="fas fa-ad" style="font-size: 50px; margin-bottom: 20px;"></i>
+                            <p>No active sponsored ads available at the moment.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                ads.forEach(ad => {
+                    const adCard = document.createElement('div');
+                    adCard.className = 'ad-card';
+                    
+                    adCard.innerHTML = `
+                        <img src="${ad.image}" alt="${ad.title}" class="ad-image" onerror="this.src='https://via.placeholder.com/350x200?text=Ad+Image'">
+                        <div class="ad-content">
+                            <h3 class="ad-title">${ad.title}</h3>
+                            <div class="company-name">${ad.companyName || 'Sponsored'}</div>
+                            <p class="ad-description">${ad.description || 'No description provided.'}</p>
+                            
+                            <div class="ad-meta">
+                                ${ad.phone ? `<div class="meta-item"><i class="fas fa-phone"></i> ${ad.phone}</div>` : ''}
+                                ${ad.email ? `<div class="meta-item"><i class="fas fa-envelope"></i> ${ad.email}</div>` : ''}
+                            </div>
+                            
+                            ${ad.link ? `<a href="${ad.link.startsWith('http') ? ad.link : 'https://' + ad.link}" target="_blank" class="ad-link">Visit Website <i class="fas fa-external-link-alt"></i></a>` : ''}
+                            
+                            <div class="ad-dates">
+                                <span><i class="far fa-calendar-alt"></i> Starts: ${formatDate(ad.start_date)}</span>
+                                <span><i class="far fa-calendar-alt"></i> Ends: ${formatDate(ad.end_date)}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    adsContainer.appendChild(adCard);
+                });
+            });
+
+            // Function to format date
+            function formatDate(dateString) {
+                if (!dateString) return 'N/A';
+                
+                try {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    return dateString; // Return original if parsing fails
+                }
+            }
+        });
+    </script>
+    <script type="text/javascript" src="/eel.js"></script>
+</body>
+</html>

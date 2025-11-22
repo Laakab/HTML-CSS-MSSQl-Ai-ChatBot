@@ -1,0 +1,3 @@
+->first of all you  can open the file of Database folder
+->make sure your all query are execute in sql management 
+->and afer that you select the folder of web1 in terminal and run file of python "index.py"
